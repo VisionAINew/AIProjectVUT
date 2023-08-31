@@ -1,0 +1,58 @@
+import speech_recognition as sr
+import pyttsx3
+
+# Initialize recognizer
+recognizer = sr.Recognizer()
+engine = pyttsx3.init()
+
+def speak(message):
+    engine.say(message)
+    engine.runAndWait()
+
+def listen_for_command():
+    with sr.Microphone() as source:
+        speak("I'm Vaal University of Technology Program Infirmary. How may I help you?")
+        print("Listening...")
+        audio = recognizer.listen(source)
+
+    try:
+        command = recognizer.recognize_google(audio)
+        return command.lower()
+    except sr.UnknownValueError:
+        print("Sorry, I couldn't understand that.")
+        return None
+    except sr.RequestError as e:
+        print("Sorry, there was an issue with the recognition service.")
+        return None
+
+def process_command():
+    while True:
+        command = listen_for_command()
+        if command:
+            if "hey how are you" in command:  # Adjust the trigger phrase as needed
+                response = "What are your symptoms? Where do you feel pain? Please describe your symptoms."
+                print(response)
+                speak(response)
+
+                symptoms = listen_for_command()
+                if symptoms:
+                    recommendation = "Based on your description, I recommend taking a painkiller like Panadol. However, it's important to consult a medical professional for accurate advice."
+                    print(recommendation)
+                    speak(recommendation)
+
+                    farewell = "You're welcome! Feel free to come back if you need anything."
+                    print(farewell)
+                    speak(farewell)
+                else:
+                    print("Sorry, I couldn't hear your symptoms.")
+                
+                # End the loop after handling the command
+                break
+            else:
+                print("I'm here to help. How may I assist you?")
+                speak("I'm here to help. How may I assist you?")
+
+if _name_ == "_main_":
+    print("Voice Recognition Program")
+    print("Say 'hey how are you' to initiate.")  # Adjust the trigger phrase as needed
+    process_command()
